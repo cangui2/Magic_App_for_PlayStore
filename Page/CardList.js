@@ -9,6 +9,8 @@ import {
   View,
   Image,
   ImageBackground,
+  Alert,
+  Button,
 } from 'react-native';
 import {
   Container,
@@ -20,7 +22,6 @@ import {
   Left,
   Body,
   Right,
-  Button,
   Title,
   H1,
   H3,
@@ -32,7 +33,7 @@ import White from '../Assets/images/white.png';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
 import RNPickerSelect from 'react-native-picker-select';
 
-const CardList = props => {
+const CardList = ({navigation}) => {
   const db = new Database();
   let bouncyCheckboxRef: BouncyCheckbox | null = null;
   const [checkboxState, setCheckboxState] = React.useState(false);
@@ -65,6 +66,10 @@ const CardList = props => {
       console.log('supp');
     }
     console.log(dataCart);
+
+    navigation.push('Home', {
+      data: dataCart,
+    });
   };
 
   const removeItem = value => {
@@ -139,10 +144,11 @@ const CardList = props => {
               <H3>Merci de selectionner une langue</H3>
             </View>
             <View style={styles.titre}>
-              <View>
+              <View
+                style={{height: 50, borderWidth: 1, borderColor: '#20232a'}}>
                 <Picker
                   selectedValue={selectedValue}
-                  style={{height: 50, width: 250}}
+                  style={{width: 250}}
                   onValueChange={(itemValue, itemIndex) =>
                     setSelectedValue(itemValue)
                   }>
@@ -162,7 +168,7 @@ const CardList = props => {
                   />
                 </Picker>
               </View>
-              <View style={{flex: 1, justifyContent: 'center'}}>
+              <View style={{flex: 1, justifyContent: 'center', paddingTop: 20}}>
                 <View
                   style={{
                     width: '75%',
@@ -256,14 +262,14 @@ const CardList = props => {
                 </View>
               </View>
               <View />
-              <Button
-                info
-                onPress={() => HandleRefresh2(selectedValue)}
-                style={{height: 50, width: 400}}>
-                <Text>Afficher</Text>
-              </Button>
             </View>
           </View>
+        </View>
+        <View style={{paddingTop: 30}}>
+          <Button
+            title="Rechercher"
+            onPress={() => HandleRefresh2(selectedValue)}
+          />
         </View>
       </ScrollView>
     );
@@ -278,7 +284,8 @@ const CardList = props => {
                 <H3>Merci de selectionner une langue</H3>
               </View>
               <View style={styles.titre}>
-                <View>
+                <View
+                  style={{height: 50, borderWidth: 1, borderColor: '#20232a'}}>
                   <Picker
                     selectedValue={selectedValue}
                     style={{height: 50, width: 250}}
@@ -301,7 +308,8 @@ const CardList = props => {
                     />
                   </Picker>
                 </View>
-                <View style={{flex: 1, justifyContent: 'center'}}>
+                <View
+                  style={{flex: 1, justifyContent: 'center', paddingTop: 20}}>
                   <View
                     style={{
                       width: '75%',
@@ -395,20 +403,18 @@ const CardList = props => {
                   </View>
                 </View>
                 <View />
-                <Button
-                  info
-                  onPress={() => HandleRefresh2(selectedValue)}
-                  style={{height: 50, width: 400}}>
-                  <Text>Afficher</Text>
-                </Button>
+                <View style={{paddingTop: 30}}>
+                  <Button
+                    title="Learn More"
+                    onPress={() => HandleRefresh2(selectedValue)}
+                  />
+                </View>
               </View>
             </View>
           </View>
           <View style={{backgroundColor: 'black'}}>{list(data)}</View>
           <View style={{backgroundColor: 'black'}}>
-            <Button primary onPress={() => changePage(2)}>
-              <Text> Suivant </Text>
-            </Button>
+            <Button primary title={'Suivant'} onPress={() => changePage(2)} />
           </View>
         </ScrollView>
       );
@@ -422,7 +428,8 @@ const CardList = props => {
                 <H3>Merci de selectionner une langue</H3>
               </View>
               <View style={styles.titre}>
-                <View>
+                <View
+                  style={{height: 50, borderWidth: 1, borderColor: '#20232a'}}>
                   <Picker
                     selectedValue={selectedValue}
                     style={{height: 50, width: 250}}
@@ -445,7 +452,8 @@ const CardList = props => {
                     />
                   </Picker>
                 </View>
-                <View style={{flex: 1, justifyContent: 'center'}}>
+                <View
+                  style={{flex: 1, justifyContent: 'center', paddingTop: 20}}>
                   <View
                     style={{
                       width: '75%',
@@ -539,23 +547,19 @@ const CardList = props => {
                   </View>
                 </View>
                 <View />
-                <Button
-                  info
-                  onPress={() => HandleRefresh2(selectedValue)}
-                  style={{height: 50, width: 400}}>
-                  <Text>Afficher</Text>
-                </Button>
               </View>
+            </View>
+            <View style={{paddingTop: 30}}>
+              <Button
+                title="Learn More"
+                onPress={() => HandleRefresh2(selectedValue)}
+              />
             </View>
           </View>
           <View style={{backgroundColor: 'black'}}>{list(data)}</View>
           <View style={styles.container}>
-            <Button primary onPress={() => changePage(1)}>
-              <Text> Retour </Text>
-            </Button>
-            <Button primary onPress={() => changePage(2)}>
-              <Text> Suivant </Text>
-            </Button>
+            <Button title={'Retour'} primary onPress={() => changePage(1)} />
+            <Button title={'Suivant'} primary onPress={() => changePage(2)} />
           </View>
         </ScrollView>
       );

@@ -35,15 +35,19 @@ import CardList from './Page/CardList';
 import async from 'async';
 import CardDetailPage from './Page/CardDetailPage';
 import SetCorePage from './Page/setCorePage';
-function HomeScreen({navigation}) {
+import deckBuilder from './Page/DeckBuilder';
+function HomeScreen({navigation, props}) {
+    const [data, setData] = useState([]);
+    console.log('app ***************' + data + '**********************');
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: 'black'}}>
       <View
         style={{
           flex: 1,
           backgroundColor: 'black',
           alignItems: 'center',
           justifyContent: 'center',
+          paddingTop: 50,
         }}>
         <Text>Home Screen</Text>
         <Image source={require('./Assets/images/1.jpg')} />
@@ -55,6 +59,7 @@ function HomeScreen({navigation}) {
           alignItems: 'center',
           flexDirection: 'row',
           justifyContent: 'center',
+          paddingTop: 50,
         }}>
         <View
           style={{
@@ -64,8 +69,57 @@ function HomeScreen({navigation}) {
             justifyContent: 'center',
           }}>
           <CardButton
-            onPress={() => navigation.navigate('Card List')}
+            onPress={() => navigation.navigate('Card List', setData(data))}
             text="Liste de card"
+            iconSize={34}
+            iconColor="white"
+            textColor="white"
+            iconType="favorite"
+            rippleColor="white"
+            end={{x: 1, y: 1}}
+            start={{x: 0, y: 0}}
+            gradientColors={['#BA5370', '#F4E2D8']}
+          />
+        </View>
+        <View
+          style={{
+            flex: 2,
+            backgroundColor: 'black',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <CardButton
+            onPress={() => navigation.navigate('DeckBuilder')}
+            text="Deck Builder"
+            iconSize={34}
+            iconColor="white"
+            textColor="white"
+            iconType="favorite"
+            rippleColor="white"
+            end={{x: 1, y: 1}}
+            start={{x: 0, y: 0}}
+            gradientColors={['#BA5370', '#F4E2D8']}
+          />
+        </View>
+      </View>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          paddingTop: 50,
+        }}>
+        <View
+          style={{
+            flex: 2,
+            backgroundColor: 'black',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <CardButton
+            //onPress={() => navigation.navigate('Card List')}
+            text="News"
             iconSize={34}
             iconColor="white"
             textColor="white"
@@ -103,9 +157,11 @@ function HomeScreen({navigation}) {
 
 const Stack = createStackNavigator();
 
-const App: () => Node = () => {
+const App: () => Node = props => {
   const isDarkMode = useColorScheme() === 'dark';
   const db = new Database();
+
+
   const [dbTest, setDbTest] = useState();
   console.log(db.initDB());
   const backgroundStyle = {
@@ -119,6 +175,7 @@ const App: () => Node = () => {
         <Stack.Screen name="Card List" component={CardList} />
         <Stack.Screen name="CardDetail" component={CardDetailPage} />
         <Stack.Screen name="setCore" component={SetCorePage} />
+        <Stack.Screen name="DeckBuilder" component={deckBuilder} />
       </Stack.Navigator>
     </NavigationContainer>
   );

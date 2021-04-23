@@ -27,8 +27,7 @@ import {
   H3,
 } from 'native-base';
 import Database from '../Database/Database';
-import {Component} from 'react';
-import AsyncSelect from 'react-select/async';
+
 
 const SetCorePage = () => {
   const [selectedValue, setSelectedValue] = useState('French');
@@ -61,7 +60,9 @@ const SetCorePage = () => {
   const list = data => {
     return data.map((element, index) => {
       return (
-        <View style={{flex: 1, flexDirection: 'row', backgroundColor: 'black'}}>
+        <View
+          style={{flex: 1, flexDirection: 'row', backgroundColor: 'black'}}
+          key={index}>
           <View
             style={{
               flex: 2,
