@@ -9,7 +9,6 @@ import {
   View,
   Image,
   ImageBackground,
-  Picker,
 } from 'react-native';
 import {
   Container,
@@ -25,15 +24,19 @@ import {
   Title,
   H1,
   H3,
+  Picker,
 } from 'native-base';
 import Database from '../Database/Database';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import White from '../Assets/images/white.png';
+import {white} from 'react-native-paper/lib/typescript/styles/colors';
+import RNPickerSelect from 'react-native-picker-select';
 
 const CardList = props => {
   const db = new Database();
   let bouncyCheckboxRef: BouncyCheckbox | null = null;
   const [checkboxState, setCheckboxState] = React.useState(false);
-
+  const [disabled, setDisabled] = useState(false);
   const [data, setData] = useState(null);
   const [language, setLanguage] = useState();
   const [selectedValue, setSelectedValue] = useState('French');
@@ -41,7 +44,7 @@ const CardList = props => {
   const [offset, setOffset] = useState(false);
   const [dataCart, setDataCart] = useState([]);
   const idx = useState(dataCart.indexOf(dataCart));
-  const [colorCard, setColorCard] = useState();
+  const [colorCard, setColorCard] = useState('R');
 
   const HandleRefresh2 = value => {
     setSelectedValue(value);
@@ -50,9 +53,18 @@ const CardList = props => {
     });
   };
   const cartSetting = value => {
-    dataCart.push({id: value});
+    console.log('bouton valide');
+    const index = dataCart.indexOf(value);
+    console.log(index);
+    if (index === -1) {
+      dataCart.push(value);
+
+      console.log(Object.keys(dataCart));
+    } else {
+      dataCart.splice(index, 1);
+      console.log('supp');
+    }
     console.log(dataCart);
-    console.log(Object.keys(dataCart));
   };
 
   const removeItem = value => {
@@ -81,7 +93,7 @@ const CardList = props => {
   const list = data => {
     return data.map((element, index) => {
       return (
-        <View key={element.key} style={{margin: 10, backgroundColor: 'white'}}>
+        <View style={{margin: 10, backgroundColor: 'white'}} key={index}>
           <ListItem thumbnail>
             <Left>
               <Thumbnail
@@ -104,18 +116,13 @@ const CardList = props => {
               </Text>
             </Body>
             <Right>
-              <Button
-                alert
-                key={element}
-                onPress={() => cartSetting(element.id)}>
-                <Text>Text</Text>
-              </Button>
-              <Button
-                alert
-                key={element}
-                onPress={() => removeItem(element.id)}>
-                <Text>Text</Text>
-              </Button>
+              <BouncyCheckbox
+                text=""
+                textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                onPress={(checked: boolean) => {
+                  cartSetting(element.id);
+                }}
+              />
             </Right>
           </ListItem>
         </View>
@@ -126,59 +133,129 @@ const CardList = props => {
     return (
       <ScrollView>
         <View>
-          <Container>
+          <View>
             <View style={styles.titre}>
               <H1>Liste des cartes Magic</H1>
               <H3>Merci de selectionner une langue</H3>
             </View>
             <View style={styles.titre}>
-              <Picker
-                selectedValue={selectedValue}
-                style={{height: 50, width: 250}}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedValue(itemValue)
-                }>
-                <Picker.Item label="French" value="French" />
-                <Picker.Item label="German" value="German" />
-                <Picker.Item label="Spanish" value="Spanish" />
-                <Picker.Item label="Italian" value="Italian" />
-                <Picker.Item label="Japanese" value="Japanese" />
-                <Picker.Item
-                  label="Portuguese (Brazil)"
-                  value="Portuguese (Brazil)"
-                />
-                <Picker.Item label="Russian" value="Russian" />
-                <Picker.Item
-                  label="Chinese Simplified"
-                  value="Chinese Simplified"
-                />
-              </Picker>
-              <View style={{margin: 8}}>
-                <BouncyCheckbox
-                  size={25}
-                  fillColor="red"
-                  textStyle={{fontFamily: 'JosefinSans-Regular'}}
-                  iconStyle={{borderColor: 'red'}}
-                  unfillColor="#FFFFFF"
-                  text="Custom Checkbox"
-                  onPress={(isChecked: boolean) => {
-                    setColorCard('W');
-                  }}
-                />
+              <View>
+                <Picker
+                  selectedValue={selectedValue}
+                  style={{height: 50, width: 250}}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedValue(itemValue)
+                  }>
+                  <Picker.Item label="French" value="French" />
+                  <Picker.Item label="German" value="German" />
+                  <Picker.Item label="Spanish" value="Spanish" />
+                  <Picker.Item label="Italian" value="Italian" />
+                  <Picker.Item label="Japanese" value="Japanese" />
+                  <Picker.Item
+                    label="Portuguese (Brazil)"
+                    value="Portuguese (Brazil)"
+                  />
+                  <Picker.Item label="Russian" value="Russian" />
+                  <Picker.Item
+                    label="Chinese Simplified"
+                    value="Chinese Simplified"
+                  />
+                </Picker>
               </View>
-              <View style={{margin: 8}}>
-                <BouncyCheckbox
-                  isChecked={true}
-                  iconStyle={{borderColor: 'blue', borderRadius: 10}}
-                  textStyle={{fontFamily: 'JosefinSans-Regular'}}
-                  unfillColor="white"
-                  borderRadius={10}
-                  text="Custom Disabled Checkbox Example"
-                  onPress={(isChecked: boolean) => {
-                    setColorCard('B');
-                  }}
-                />
+              <View style={{flex: 1, justifyContent: 'center'}}>
+                <View
+                  style={{
+                    width: '75%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      width: '50%',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <BouncyCheckbox
+                      style={{width: '25%', padding: 1}}
+                      size={25}
+                      fillColor="beige"
+                      textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                      iconStyle={{borderColor: 'red'}}
+                      unfillColor="#FFFFFF"
+                      text={''}
+                      onPress={(isChecked: boolean) => {
+                        setColorCard('W');
+                      }}
+                    />
+                    <Image
+                      style={{width: '35%', height: '130%', padding: 1}}
+                      source={require('../Assets/images/white.png')}
+                    />
+
+                    <BouncyCheckbox
+                      style={{width: '25%', padding: 1}}
+                      isChecked={true}
+                      fillColor="red"
+                      iconStyle={{borderColor: 'red', borderRadius: 10}}
+                      textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                      unfillColor="white"
+                      borderRadius={10}
+                      text=" "
+                      onPress={(isChecked: boolean) => {
+                        setColorCard('R');
+                      }}
+                    />
+                    <Image
+                      style={{width: '35%', height: '130%', padding: 1}}
+                      source={require('../Assets/images/red.png')}
+                    />
+                    <BouncyCheckbox
+                      style={{width: '35%', padding: 1, margin: -5}}
+                      size={25}
+                      fillColor="black"
+                      textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                      iconStyle={{borderColor: 'black'}}
+                      unfillColor="#FFFFFF"
+                      text=""
+                      onPress={(isChecked: boolean) => {
+                        setColorCard('B');
+                      }}
+                    />
+                    <Image
+                      style={{
+                        width: '35%',
+                        height: '130%',
+                        padding: 1,
+                        margin: -5,
+                      }}
+                      source={require('../Assets/images/black.png')}
+                    />
+                    <BouncyCheckbox
+                      style={{width: '35%', padding: 0, margin: 0}}
+                      size={25}
+                      fillColor="green"
+                      textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                      iconStyle={{borderColor: 'green'}}
+                      unfillColor="#FFFFFF"
+                      text=""
+                      onPress={(isChecked: boolean) => {
+                        setColorCard('G');
+                      }}
+                    />
+                    <Image
+                      style={{
+                        width: '35%',
+                        height: '130%',
+                        padding: 0,
+                        margin: -10,
+                      }}
+                      source={require('../Assets/images/green.png')}
+                    />
+                  </View>
+                </View>
               </View>
+              <View />
               <Button
                 info
                 onPress={() => HandleRefresh2(selectedValue)}
@@ -186,7 +263,7 @@ const CardList = props => {
                 <Text>Afficher</Text>
               </Button>
             </View>
-          </Container>
+          </View>
         </View>
       </ScrollView>
     );
@@ -194,39 +271,139 @@ const CardList = props => {
     if (page <= 1) {
       return (
         <ScrollView>
-          <View style={styles.titre}>
-            <H1>Liste des cartes Magic</H1>
-            <H3>Merci de selectionner une langue</H3>
+          <View>
+            <View>
+              <View style={styles.titre}>
+                <H1>Liste des cartes Magic</H1>
+                <H3>Merci de selectionner une langue</H3>
+              </View>
+              <View style={styles.titre}>
+                <View>
+                  <Picker
+                    selectedValue={selectedValue}
+                    style={{height: 50, width: 250}}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectedValue(itemValue)
+                    }>
+                    <Picker.Item label="French" value="French" />
+                    <Picker.Item label="German" value="German" />
+                    <Picker.Item label="Spanish" value="Spanish" />
+                    <Picker.Item label="Italian" value="Italian" />
+                    <Picker.Item label="Japanese" value="Japanese" />
+                    <Picker.Item
+                      label="Portuguese (Brazil)"
+                      value="Portuguese (Brazil)"
+                    />
+                    <Picker.Item label="Russian" value="Russian" />
+                    <Picker.Item
+                      label="Chinese Simplified"
+                      value="Chinese Simplified"
+                    />
+                  </Picker>
+                </View>
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <View
+                    style={{
+                      width: '75%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <View
+                      style={{
+                        width: '50%',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}>
+                      <BouncyCheckbox
+                        style={{width: '25%', padding: 1}}
+                        size={25}
+                        fillColor="beige"
+                        textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                        iconStyle={{borderColor: 'red'}}
+                        unfillColor="#FFFFFF"
+                        text={''}
+                        onPress={(isChecked: boolean) => {
+                          setColorCard('W');
+                        }}
+                      />
+                      <Image
+                        style={{width: '35%', height: '130%', padding: 1}}
+                        source={require('../Assets/images/white.png')}
+                      />
+
+                      <BouncyCheckbox
+                        style={{width: '25%', padding: 1}}
+                        isChecked={true}
+                        fillColor="red"
+                        iconStyle={{borderColor: 'red', borderRadius: 10}}
+                        textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                        unfillColor="white"
+                        borderRadius={10}
+                        text=" "
+                        onPress={(isChecked: boolean) => {
+                          setColorCard('R');
+                        }}
+                      />
+                      <Image
+                        style={{width: '35%', height: '130%', padding: 1}}
+                        source={require('../Assets/images/red.png')}
+                      />
+                      <BouncyCheckbox
+                        style={{width: '35%', padding: 1, margin: -5}}
+                        size={25}
+                        fillColor="black"
+                        textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                        iconStyle={{borderColor: 'black'}}
+                        unfillColor="#FFFFFF"
+                        text=""
+                        onPress={(isChecked: boolean) => {
+                          setColorCard('B');
+                        }}
+                      />
+                      <Image
+                        style={{
+                          width: '35%',
+                          height: '130%',
+                          padding: 1,
+                          margin: -5,
+                        }}
+                        source={require('../Assets/images/black.png')}
+                      />
+                      <BouncyCheckbox
+                        style={{width: '35%', padding: 0, margin: 0}}
+                        size={25}
+                        fillColor="green"
+                        textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                        iconStyle={{borderColor: 'green'}}
+                        unfillColor="#FFFFFF"
+                        text=""
+                        onPress={(isChecked: boolean) => {
+                          setColorCard('G');
+                        }}
+                      />
+                      <Image
+                        style={{
+                          width: '35%',
+                          height: '130%',
+                          padding: 0,
+                          margin: -10,
+                        }}
+                        source={require('../Assets/images/green.png')}
+                      />
+                    </View>
+                  </View>
+                </View>
+                <View />
+                <Button
+                  info
+                  onPress={() => HandleRefresh2(selectedValue)}
+                  style={{height: 50, width: 400}}>
+                  <Text>Afficher</Text>
+                </Button>
+              </View>
+            </View>
           </View>
-          <View style={styles.titre}>
-            <Picker
-              selectedValue={selectedValue}
-              style={{height: 50, width: 250}}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedValue(itemValue)
-              }>
-              <Picker.Item label="French" value="French" />
-              <Picker.Item label="German" value="German" />
-              <Picker.Item label="Spanish" value="Spanish" />
-              <Picker.Item label="Italian" value="Italian" />
-              <Picker.Item label="Japanese" value="Japanese" />
-              <Picker.Item
-                label="Portuguese (Brazil)"
-                value="Portuguese (Brazil)"
-              />
-              <Picker.Item label="Russian" value="Russian" />
-              <Picker.Item
-                label="Chinese Simplified"
-                value="Chinese Simplified"
-              />
-            </Picker>
-          </View>
-          <Button
-            info
-            onPress={() => HandleRefresh2(selectedValue)}
-            style={{height: 50, width: 400}}>
-            <Text>Afficher</Text>
-          </Button>
           <View style={{backgroundColor: 'black'}}>{list(data)}</View>
           <View style={{backgroundColor: 'black'}}>
             <Button primary onPress={() => changePage(2)}>
@@ -238,40 +415,138 @@ const CardList = props => {
     } else {
       return (
         <ScrollView>
-          <View style={styles.titre}>
-            <H1>Liste des cartes Magic</H1>
-            <H3>Merci de selectionner une langue</H3>
-          </View>
-          <View style={styles.titre}>
-            <Picker
-              selectedValue={selectedValue}
-              style={{height: 50, width: 250}}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedValue(itemValue)
-              }>
-              <Picker.Item label="French" value="French" />
-              <Picker.Item label="German" value="German" />
-              <Picker.Item label="Spanish" value="Spanish" />
-              <Picker.Item label="Italian" value="Italian" />
-              <Picker.Item label="Japanese" value="Japanese" />
-              <Picker.Item
-                label="Portuguese (Brazil)"
-                value="Portuguese (Brazil)"
-              />
-              <Picker.Item label="Russian" value="Russian" />
-              <Picker.Item
-                label="Chinese Simplified"
-                value="Chinese Simplified"
-              />
-            </Picker>
-          </View>
           <View>
-            <Button
-              info
-              onPress={() => HandleRefresh2(selectedValue)}
-              style={{height: 50, width: 400}}>
-              <Text>Afficher</Text>
-            </Button>
+            <View>
+              <View style={styles.titre}>
+                <H1>Liste des cartes Magic</H1>
+                <H3>Merci de selectionner une langue</H3>
+              </View>
+              <View style={styles.titre}>
+                <View>
+                  <Picker
+                    selectedValue={selectedValue}
+                    style={{height: 50, width: 250}}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectedValue(itemValue)
+                    }>
+                    <Picker.Item label="French" value="French" />
+                    <Picker.Item label="German" value="German" />
+                    <Picker.Item label="Spanish" value="Spanish" />
+                    <Picker.Item label="Italian" value="Italian" />
+                    <Picker.Item label="Japanese" value="Japanese" />
+                    <Picker.Item
+                      label="Portuguese (Brazil)"
+                      value="Portuguese (Brazil)"
+                    />
+                    <Picker.Item label="Russian" value="Russian" />
+                    <Picker.Item
+                      label="Chinese Simplified"
+                      value="Chinese Simplified"
+                    />
+                  </Picker>
+                </View>
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <View
+                    style={{
+                      width: '75%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <View
+                      style={{
+                        width: '50%',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}>
+                      <BouncyCheckbox
+                        style={{width: '25%', padding: 1}}
+                        size={25}
+                        fillColor="beige"
+                        textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                        iconStyle={{borderColor: 'red'}}
+                        unfillColor="#FFFFFF"
+                        text={''}
+                        onPress={(isChecked: boolean) => {
+                          setColorCard('W');
+                        }}
+                      />
+                      <Image
+                        style={{width: '35%', height: '130%', padding: 1}}
+                        source={require('../Assets/images/white.png')}
+                      />
+
+                      <BouncyCheckbox
+                        style={{width: '25%', padding: 1}}
+                        isChecked={true}
+                        fillColor="red"
+                        iconStyle={{borderColor: 'red', borderRadius: 10}}
+                        textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                        unfillColor="white"
+                        borderRadius={10}
+                        text=" "
+                        onPress={(isChecked: boolean) => {
+                          setColorCard('R');
+                        }}
+                      />
+                      <Image
+                        style={{width: '35%', height: '130%', padding: 1}}
+                        source={require('../Assets/images/red.png')}
+                      />
+                      <BouncyCheckbox
+                        style={{width: '35%', padding: 1, margin: -5}}
+                        size={25}
+                        fillColor="black"
+                        textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                        iconStyle={{borderColor: 'black'}}
+                        unfillColor="#FFFFFF"
+                        text=""
+                        onPress={(isChecked: boolean) => {
+                          setColorCard('B');
+                        }}
+                      />
+                      <Image
+                        style={{
+                          width: '35%',
+                          height: '130%',
+                          padding: 1,
+                          margin: -5,
+                        }}
+                        source={require('../Assets/images/black.png')}
+                      />
+                      <BouncyCheckbox
+                        style={{width: '35%', padding: 0, margin: 0}}
+                        size={25}
+                        fillColor="green"
+                        textStyle={{fontFamily: 'JosefinSans-Regular'}}
+                        iconStyle={{borderColor: 'green'}}
+                        unfillColor="#FFFFFF"
+                        text=""
+                        onPress={(isChecked: boolean) => {
+                          setColorCard('G');
+                        }}
+                      />
+                      <Image
+                        style={{
+                          width: '35%',
+                          height: '130%',
+                          padding: 0,
+                          margin: -10,
+                        }}
+                        source={require('../Assets/images/green.png')}
+                      />
+                    </View>
+                  </View>
+                </View>
+                <View />
+                <Button
+                  info
+                  onPress={() => HandleRefresh2(selectedValue)}
+                  style={{height: 50, width: 400}}>
+                  <Text>Afficher</Text>
+                </Button>
+              </View>
+            </View>
           </View>
           <View style={{backgroundColor: 'black'}}>{list(data)}</View>
           <View style={styles.container}>
