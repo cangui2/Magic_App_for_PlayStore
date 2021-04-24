@@ -37,8 +37,8 @@ import CardDetailPage from './Page/CardDetailPage';
 import SetCorePage from './Page/setCorePage';
 import deckBuilder from './Page/DeckBuilder';
 function HomeScreen({navigation, props}) {
-    const [data, setData] = useState([]);
-    console.log('app ***************' + data + '**********************');
+  const [data, setData] = useState(['hh']);
+  console.log('app ***************' + data + '**********************');
   return (
     <ScrollView style={{backgroundColor: 'black'}}>
       <View
@@ -69,7 +69,7 @@ function HomeScreen({navigation, props}) {
             justifyContent: 'center',
           }}>
           <CardButton
-            onPress={() => navigation.navigate('Card List', setData(data))}
+            onPress={() => navigation.navigate('Card List', data)}
             text="Liste de card"
             iconSize={34}
             iconColor="white"
@@ -160,7 +160,6 @@ const Stack = createStackNavigator();
 const App: () => Node = props => {
   const isDarkMode = useColorScheme() === 'dark';
   const db = new Database();
-
 
   const [dbTest, setDbTest] = useState();
   console.log(db.initDB());

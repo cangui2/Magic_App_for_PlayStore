@@ -49,6 +49,7 @@ const CardList = ({navigation}) => {
 
   const HandleRefresh2 = value => {
     setSelectedValue(value);
+    console.log(page+"page");
     db.listCardByLanguage(value, page, colorCard).then(result => {
       setData(result);
     });
@@ -66,10 +67,11 @@ const CardList = ({navigation}) => {
       console.log('supp');
     }
     console.log(dataCart);
-
-    navigation.push('Home', {
-      data: dataCart,
-    });
+    if ((dataCart != null) | undefined) {
+      navigation.push('Home', {
+        data: dataCart,
+      });
+    }
   };
 
   const removeItem = value => {
@@ -92,9 +94,10 @@ const CardList = ({navigation}) => {
       count = page + 4;
       setPage(count);
     }
-    HandleRefresh2(selectedValue, page);
   };
-
+  useEffect(() => {
+    HandleRefresh2(selectedValue);
+  }, [page]);
   const list = data => {
     return data.map((element, index) => {
       return (
@@ -274,7 +277,7 @@ const CardList = ({navigation}) => {
       </ScrollView>
     );
   } else {
-    if (page <= 1) {
+    if (page <= 0) {
       return (
         <ScrollView>
           <View>
